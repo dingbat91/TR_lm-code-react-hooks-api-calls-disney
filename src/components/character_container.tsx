@@ -4,7 +4,7 @@ import Character from "./character";
 
 interface CharacterContainerProps {
 	characters: Array<DisneyCharacter>;
-	updateFavourites: (favourites: Array<number>) => void;
+	updateFavourites: (favourites: DisneyCharacter[]) => void;
 }
 
 const CharacterContainer: React.FC<CharacterContainerProps> = ({

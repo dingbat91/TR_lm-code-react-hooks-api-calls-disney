@@ -4,7 +4,7 @@ import { DisneyCharacter } from "../disney_character";
 
 interface CharacterProps {
 	character: DisneyCharacter;
-	updateFavourites: (favourites: Array<number>) => void;
+	updateFavourites: (favourites: Array<DisneyCharacter>) => void;
 }
 
 const Character: React.FC<CharacterProps> = ({
@@ -12,16 +12,17 @@ const Character: React.FC<CharacterProps> = ({
 	updateFavourites,
 }) => {
 	const characterFavourites = useContext(FavouriteContext);
-	function toggleFavouritesForCharacter(characterID: number) {
-		if (!characterFavourites.includes(characterID)) {
-			updateFavourites([...characterFavourites, characterID]);
+
+	const toggleFavouritesForCharacter = (char: DisneyCharacter) => {
+		if (!characterFavourites.includes(char)) {
+			const newFaves = [...characterFavourites, char];
+			newFaves.sort((a, b) => a.name.localeCompare(b.name));
+			updateFavourites(newFaves);
 		} else {
-			const updatedFavourites = characterFavourites.filter(
-				(id) => id !== characterID
-			);
-			updateFavourites(updatedFavourites);
+			const newFaves = characterFavourites.filter((c) => c != char);
+			updateFavourites(newFaves);
 		}
-	}
+	};
 
 	return (
 		<article className='card'>
@@ -29,11 +30,11 @@ const Character: React.FC<CharacterProps> = ({
 
 			<button
 				className='card__button '
-				onClick={() => toggleFavouritesForCharacter(character._id)}
+				onClick={() => toggleFavouritesForCharacter(character)}
 			>
-				{!characterFavourites.includes(character._id)
-					? "Add to favourites"
-					: "Favourited"}
+				{characterFavourites.includes(character)
+					? "Remove from favourite"
+					: "Add to favourite"}
 			</button>
 
 			<img
